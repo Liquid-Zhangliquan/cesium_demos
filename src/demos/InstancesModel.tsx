@@ -8,8 +8,6 @@ class Options {
     tilesChange: () => void;
     index: number = 0;
 }
-
-
 export class InstancesModel extends React.Component {
     static title = "模型Instances";
     gui: any;
@@ -18,10 +16,6 @@ export class InstancesModel extends React.Component {
             <CesiumMap id={InstancesModel.title} onViewerLoaded={(viewer) => { this.handleViewerLoaded(viewer) }
             } />
         )
-    }
-
-    componentDidMount() {
-
     }
     componentWillUnmount() {
         if (this.gui) {
@@ -83,6 +77,8 @@ export class InstancesModel extends React.Component {
                 let spacing = 0.0004;
                 let modelUrl = "./static/models/ship/scene.gltf";
                 modelUrl = "./static/models/excavator.gltf"
+                modelUrl = "./static/models/1.gltf"
+
 
                 let instances = [];
                 let pick = Helper.pickPosByNormalDir(tiles_a.boundingSphere.center, viewer);
@@ -100,7 +96,7 @@ export class InstancesModel extends React.Component {
                         let pick = Helper.pickPosByNormalDir(position, viewer);
                         if (pick != null && pick.position) {
                             let modelMatrix = Cesium.Transforms.eastNorthUpToFixedFrame(pick.position);
-                            Cesium.Matrix4.multiplyByUniformScale(modelMatrix, 0.4, modelMatrix);
+                            Cesium.Matrix4.multiplyByUniformScale(modelMatrix, 10, modelMatrix);
                             instances.push(modelMatrix);
                         }
                     }
@@ -113,7 +109,6 @@ export class InstancesModel extends React.Component {
             }, 3000);
         });
     }
-
     private createCollection(url: string, instances: { modelMatrix: Cesium.Matrix4 }[], viewer: Cesium.Viewer) {
         let collection = viewer.scene.primitives.add(new Cesium.ModelInstanceCollection({
             url: url,
@@ -121,16 +116,15 @@ export class InstancesModel extends React.Component {
             shadows: Cesium.ShadowMode.CAST_ONLY,
             dynamic: true
         })) as Cesium.ModelInstanceCollection;
-        return collection;
-        collection.readyPromise.then((collection) => {
+        collection.readyPromise.then(function (collection) {
             // Play and loop all animations at half-speed
-            // viewer.scene.camera.flyToBoundingSphere(collection._boundingSphere);
+            collection.activeAnimations.addAll({
+                multiplier: 0.5,
+                loop: Cesium.ModelAnimationLoop.REPEAT
+            });
         })
-        // .otherwise((error) => {
-        //     window.alert(error);
-        // });
+        return collection;
     }
-
     private add3dtiles(viewer: Cesium.Viewer, modelPath: string): Cesium.Cesium3DTileset {
         return viewer.scene.primitives.add(new Cesium.Cesium3DTileset({
             url: modelPath,
@@ -138,13 +132,14 @@ export class InstancesModel extends React.Component {
             maximumNumberOfLoadedTiles: 100
         })) as Cesium.Cesium3DTileset;
     }
-
     private addModelInteractive(viewer: Cesium.Viewer) {
         let handler = new Cesium.ScreenSpaceEventHandler();
+        let modelUrl = "./static/models/1.gltf";
+        // modelUrl="./static/models/ship/scene.gltf";
         handler.setInputAction((event) => {
             let pos = viewer.scene.pickPosition(event.position);
             if (pos != null) {
-                this.addModel(viewer, "./static/models/ship/scene.gltf", pos);
+                this.addModel(viewer, modelUrl, pos);
             }
         }, Cesium.ScreenSpaceEventType.LEFT_UP);
     }
@@ -158,8 +153,6 @@ export class InstancesModel extends React.Component {
             }
         });
     }
-
-
     private autoUpdateInstancesPosition(collection: Cesium.ModelInstanceCollection) {
         let instances = collection._instances;
         setInterval(() => {

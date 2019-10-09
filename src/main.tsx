@@ -4,6 +4,7 @@ import { Load3dtiles } from "./demos/load3dTiles";
 import { Adjust3dtilesHeight } from "./demos/adjust3dtilesHeight";
 import { CameraRot } from "./demos/cameraRotation";
 import { CustomeRiver } from "./demos/customeRiver";
+import { CustomeFreezeRiver } from "./demos/customeFreezeRiver";
 import { CustomeGeometry } from "./demos/customeGeometry";
 import { UpdateInstancesAttribute } from "./demos/updateInstancesAttribute";
 import { MutilplyPick } from "./demos/pick";
@@ -39,6 +40,7 @@ export class Main extends React.Component {
             { title: CameraRot.title, element: < CameraRot /> },
             { title: AIPatrol.title, element: < AIPatrol /> },
             { title: CustomeRiver.title, element: < CustomeRiver /> },
+            { title: CustomeFreezeRiver.title, element: < CustomeFreezeRiver /> },
             { title: Classification_1.title, element: < Classification_1 /> },
             // { title: Classification_2.title, element: < Classification_2 /> },
             { title: Dom_animationPoint.title, element: < Dom_animationPoint /> },

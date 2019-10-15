@@ -21,8 +21,8 @@ export class CustomeFreezeRiver extends React.Component {
         }).then((riverPoint) => {
             let polygon = new Cesium.PolygonGeometry({
                 polygonHierarchy: new Cesium.PolygonHierarchy(Cesium.Cartesian3.fromDegreesArray(riverPoint)),
-                extrudedHeight: 0,
-                height: 3,
+                extrudedHeight: 5,
+                height: 0,
                 vertexFormat: Cesium.EllipsoidSurfaceAppearance.VERTEX_FORMAT
             });
             let inc = new Cesium.GeometryInstance({
@@ -50,7 +50,7 @@ export class CustomeFreezeRiver extends React.Component {
                     // }
                     type: 'Image',
                     uniforms: {
-                        image: "./static/images/ice7.jpg"
+                        image: "./static/images/ice1.jpg"
                     }
                 }
             });
